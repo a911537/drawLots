@@ -1,38 +1,47 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-  <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>血盟抽籤</title>
-    <meta property="og:type" content="website"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css" media="screen"/>
-    <link rel="stylesheet" href="dist/style.min.css" media="screen"/>
-  </head>
-  <body>
-    <!-- Google Tag Manager (noscript)-->
-    <noscript>
-      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PGQ9WQT" height="0" width="0" style="display:none;visibility:hidden"></iframe>
-    </noscript>
-    <div class="text-center">
-      <h1>誰是幸運兒</h1>
-    </div>
-    <hr/>
-    <section class="js-append-card"></section>
-    <script>
-      const uri = 'https://sheets.googleapis.com/v4/spreadsheets/1UkxtvO5Ox5cb2wUcZJx4jdAz1IR5-1C-YItKkVRRhHI/values/工作表1?alt=json&key=AIzaSyDPoHPHdVooA0NHZvssoQP1PqdFrVttUH4';
-      
-      fetch(uri)
-        .then(res => res.json())
-        .then(res => {
-          const data = res.values;
-          console.log(data);
-      
-          // 刪除第一個陣列
-          data.shift();
-      
-          Array.prototype.forEach.call(data, d => {
-            let Card = `
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>血盟抽籤</title>
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css" media="screen" />
+  <link rel="stylesheet" href="dist/style.min.css" media="screen" />
+</head>
+
+<body>
+  <div class="text-center">
+    <h1>誰是幸運兒</h1>
+  </div>
+  <hr />
+  <section class="js-append-card"></section>
+  <div class="text-center"><h2 id = "resultBar" hidden></h2></div>
+
+  <!--  start button -->
+  <a class="btn-start" href="#">
+    <span class="line top -h"></span>
+    <span class="line right -v"></span>
+    <span class="line bottom -h"></span>
+    <span class="line left -v"></span>
+  </a>
+  <script>
+    const uri = 'https://sheets.googleapis.com/v4/spreadsheets/1UkxtvO5Ox5cb2wUcZJx4jdAz1IR5-1C-YItKkVRRhHI/values/工作表1?alt=json&key=AIzaSyDPoHPHdVooA0NHZvssoQP1PqdFrVttUH4';
+    const duration = 3000; // 拉霸效果執行多久
+    fetch(uri)
+      .then(res => res.json())
+      .then(res => {
+        const data = res.values;
+
+        // 刪除第一個陣列
+        data.shift();
+        const candidate = data.filter(function (item, index, array) {
+          return item[2] == 'Y';       // 取得參賽者
+        });
+        Array.prototype.forEach.call(candidate, d => {
+          let Card = `
               <div class="card">
                 <div class="avatar">
                   <img src="${d[1]}">
@@ -41,10 +50,53 @@
                   <h4>${d[0]}</h4>
                 </div>
               </div>`;
-            
-            document.querySelector('.js-append-card').insertAdjacentHTML('beforeend', Card);
-          })
+
+          document.querySelector('.js-append-card').insertAdjacentHTML('beforeend', Card);
         })
-    </script>
-  </body>
+
+        // 點擊按鈕後執行
+				let r; // 亂數
+				let max, min; // 陣列的最大、小值
+
+        // 按鈕
+        const btn = document.querySelector('.btn-start');
+        let winner = {};
+        btn.addEventListener('click', e => {
+          e.preventDefault();
+
+          // 選玩家 fn
+          const choose = toggle => {
+
+            // 取亂數 fn
+            r = () => {
+              max = toggle.length - 1;
+              min = 0;
+              return Math.floor(Math.random() * (max - min + 1)) + min;
+            };
+
+            // 禁止按鈕再被點擊
+            e.target.classList.add('not-allow');
+
+            // // 加入動畫 class name
+            // const list = document.querySelectorAll('.wrap > span');
+            // Array.prototype.forEach.call(list, l => l.classList.add('span-' + (toggle.length - 1)));
+
+            // 亂數決定中選參賽者
+            winner = toggle[r()];
+            let resultBar = document.getElementById("resultBar");
+            resultBar.hidden = false;
+            resultBar.innerText = "恭喜[" + winner[0] + "]得獎";
+            // // 移除動畫
+            // setTimeout(() => {
+            //   // 停止拉霸動畫
+            //   Array.prototype.forEach.call(list, l => l.removeAttribute('class'));
+            // }, duration);
+            e.target.classList.remove('not-allow');
+          };
+          choose(candidate);
+        }, false);
+      })
+  </script>
+</body>
+
 </html>
