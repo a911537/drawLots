@@ -19,7 +19,9 @@
   <hr />
   <section class="js-append-card"></section>
   <div class="text-center">
-    <h2 id="resultBar" hidden></h2>
+    <marquee scrollamount=20>
+      <h2 id="resultBar" hidden></h2>
+      </marquee>
   </div>
 
   <!--  start button -->
@@ -91,7 +93,7 @@
             }
 
             async function border() {
-              for (let i = 0; i < list.length + 40; i++) {
+              for (let i = 0; i < list.length + 10; i++) {
                 if (i > 0) {
                   list[(i - 1) % list.length].style.border = "none";
                 }
