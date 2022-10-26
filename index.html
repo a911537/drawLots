@@ -18,7 +18,9 @@
   </div>
   <hr />
   <section class="js-append-card"></section>
-  <div class="text-center"><h2 id = "resultBar" hidden></h2></div>
+  <div class="text-center">
+    <h2 id="resultBar" hidden></h2>
+  </div>
 
   <!--  start button -->
   <a class="btn-start" href="#">
@@ -29,7 +31,7 @@
   </a>
   <script>
     const uri = 'https://sheets.googleapis.com/v4/spreadsheets/1UkxtvO5Ox5cb2wUcZJx4jdAz1IR5-1C-YItKkVRRhHI/values/工作表1?alt=json&key=AIzaSyDPoHPHdVooA0NHZvssoQP1PqdFrVttUH4';
-    const duration = 3000; // 拉霸效果執行多久
+    let duration = 100; // 拉霸效果執行多久
     fetch(uri)
       .then(res => res.json())
       .then(res => {
@@ -55,13 +57,17 @@
         })
 
         // 點擊按鈕後執行
-				let r; // 亂數
-				let max, min; // 陣列的最大、小值
+        let r; // 亂數
+        let max, min; // 陣列的最大、小值
 
         // 按鈕
         const btn = document.querySelector('.btn-start');
-        let winner = {};
+        // 中獎區塊
+        const resultBar = document.getElementById("resultBar");
+
         btn.addEventListener('click', e => {
+          // 先隱藏
+          resultBar.hidden = true;
           e.preventDefault();
 
           // 選玩家 fn
@@ -78,20 +84,32 @@
             e.target.classList.add('not-allow');
 
             // // 加入動畫 class name
-            // const list = document.querySelectorAll('.wrap > span');
-            // Array.prototype.forEach.call(list, l => l.classList.add('span-' + (toggle.length - 1)));
+            const list = document.querySelectorAll('.avatar');
 
-            // 亂數決定中選參賽者
-            winner = toggle[r()];
-            let resultBar = document.getElementById("resultBar");
-            resultBar.hidden = false;
-            resultBar.innerText = "恭喜[" + winner[0] + "]得獎";
-            // // 移除動畫
-            // setTimeout(() => {
-            //   // 停止拉霸動畫
-            //   Array.prototype.forEach.call(list, l => l.removeAttribute('class'));
-            // }, duration);
-            e.target.classList.remove('not-allow');
+            function sleep(ms) {
+              return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            async function border() {
+              for (let i = 0; i < list.length + 40; i++) {
+                if (i > 0) {
+                  list[(i - 1) % list.length].style.border = "none";
+                }
+                list[i % list.length].style.border = "thick solid red";
+                await sleep(duration++);
+              }
+              // 移除外框效果
+							Array.prototype.forEach.call(list, l => l.style.border = "none");
+              // 亂數決定中選參賽者
+              let winnerIndex = r();
+              let winner = toggle[winnerIndex];
+              
+              resultBar.hidden = false;
+              resultBar.innerText = "恭喜[" + winner[0] + "]得獎";
+              list[winnerIndex].style.border = "dashed red"
+              e.target.classList.remove('not-allow');
+            }
+            border();
           };
           choose(candidate);
         }, false);
