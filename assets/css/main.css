@@ -6,6 +6,11 @@
   box-sizing: border-box;
 }
 
+.label-text {
+  display: inline-flex;
+  align-items: center;
+}
+
 .full-block {
   display: flex;
   align-items: center;
