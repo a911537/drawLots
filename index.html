@@ -46,7 +46,7 @@
           let Card = `
               <div class="card">
                 <div class="avatar">
-                  <img src="${d[1]}">
+                  <img style="max-width: 70%" src="${d[1]}">
                 </div>
                 <div class="text-center">
                   <h4>${d[0]}</h4>
@@ -91,7 +91,7 @@
             }
 
             async function border() {
-              for (let i = 0; i < list.length + 10; i++) {
+              for (let i = 0; i < list.length + 50; i++) {
                 if (i > 0) {
                   list[(i - 1) % list.length].style.border = "none";
                 }
