@@ -81,7 +81,7 @@
   margin-bottom: 3rem;
 }
 
-.btn-start {
+.start-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -92,33 +92,9 @@
   margin-left: 2rem;
   padding: 1rem 2rem;
   width: 100%;
-  border: 1px solid rgba(41, 44, 55, 0.27);
+  border: 1px solid rgba(21, 255, 0, 0.27);
   text-decoration: none;
-  color: rgba(41, 44, 55, 0.54);
-}
-
-.btn-start::after {
-  content: "轉動命運輪盤";
-  line-height: 1;
-}
-
-.btn-start:hover {
-  color: #CD0505;
-}
-
-.btn-start.not-allow {
-  pointer-events: none;
-}
-
-.btn-start.not-allow::after {
-  font-family: "FontAwesome";
-  content: "\f110";
-  -webkit-animation: fa-spin 2s infinite linear;
-  animation: fa-spin 2s infinite linear;
-}
-
-.btn-start.not-allow:hover {
-  color: #CCC;
+  color: rgba(255, 254, 254, 0.54);
 }
 
 @media screen and (max-width: 768px) {
