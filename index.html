@@ -40,7 +40,7 @@
         // 刪除第一個陣列
         data.shift();
         const candidate = data.filter(function (item, index, array) {
-          return item[2] == 'Y';       // 取得參賽者
+          return item[2] == 'TRUE';       // 取得參賽者
         });
         Array.prototype.forEach.call(candidate, d => {
           let Card = `
